@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 7000;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: true,
+  origin: "http://192.168.1.70:7000",
   credentials: true
 }));
 app.use(express.json());
