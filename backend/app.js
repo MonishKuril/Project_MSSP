@@ -16,10 +16,18 @@ const PORT = process.env.PORT || 7000;
 
 // Security middleware
 app.use(helmet());
+app.use(cors());
 app.use(cors({
-  origin: "http://192.168.1.70:7000",
-  credentials: true
+  origin: [
+    "http://localhost:7000",
+    "http://127.0.0.1:7000",
+    "http://192.168.1.70:7000"
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
+
 app.use(express.json());
 app.use(cookieParser(process.env.SESSION_SECRET));
 
@@ -32,14 +40,16 @@ app.use('/api/news', newsRoutes);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../frontend/public')));
-app.use('/scripts', express.static(path.join(__dirname, '../frontend/scripts')));
+app.use('/scripts', express.static(path.join(__dirname, '../frontend/scripts')))                                                                             ;
 app.use('/styles', express.static(path.join(__dirname, '../frontend/styles')));
 
 // Route all other requests to index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
 });
-
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
